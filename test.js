@@ -1,10 +1,19 @@
-function getArgs() {
-  console.log(arguments);
-  const slice = Array.prototype.slice;
-  console.log(slice);
-  const arr = slice.call(arguments);
-  console.log(arr, this);
-  return arr;
+function ExecutionContext(environmentRecord, outer) {
+  this.environmentRecord = environmentRecord;
+  this.outer = outer;
+
+  this.findProperty = function findProperty(property) {
+    const foundValue = this.environmentRecord[property];
+    if (!foundValue && !this.outer) return null;
+    return foundValue ? foundValue : this.outer.findProperty(property);
+  };
 }
 
-console.log(getArgs(1, 2, 3));
+const globalExecutionContext = new ExecutionContext({ x: 1 }, null);
+const fooExecutionContext = new ExecutionContext(
+  { y: 2 },
+  globalExecutionContext
+);
+const barExecutionContext = new ExecutionContext({ z: 3 }, fooExecutionContext);
+
+console.log(barExecutionContext.findProperty("x")); // 1
