@@ -1,19 +1,28 @@
-function ExecutionContext(environmentRecord, outer) {
-  this.environmentRecord = environmentRecord;
-  this.outer = outer;
+// function Person(name, age) {
+//   this.name = name;
+//   let _age = age;
 
-  this.findProperty = function findProperty(property) {
-    const foundValue = this.environmentRecord[property];
-    if (!foundValue && !this.outer) return null;
-    return foundValue ? foundValue : this.outer.findProperty(property);
+//   this.sayHi = function () {
+//     console.log(`Hi I am ${this.name}(${_age}) `);
+//   };
+// }
+const Person = (function () {
+  let _age;
+  function Person(name, age) {
+    this.name = name;
+    _age = age;
+  }
+  Person.prototype.sayHi = function () {
+    console.log(`Hi I am ${this.name}(${_age}) `);
   };
-}
+  return Person;
+})();
+const me = new Person("Park", 22);
+me.sayHi();
+console.log(me.name, me._age); //Park , undefined
 
-const globalExecutionContext = new ExecutionContext({ x: 1 }, null);
-const fooExecutionContext = new ExecutionContext(
-  { y: 2 },
-  globalExecutionContext
-);
-const barExecutionContext = new ExecutionContext({ z: 3 }, fooExecutionContext);
+const you = new Person("Lee", 27);
+you.sayHi();
+console.log(you.name, you._age); //Park , undefined
 
-console.log(barExecutionContext.findProperty("x")); // 1
+me.sayHi();
