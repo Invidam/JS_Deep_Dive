@@ -53,61 +53,66 @@
 
 ### 메서드
 
+#### 정적 메서드
+
+- Array.isArray() : 배열인지 확인
+
+#### 프로토타입 메서드
+
 - Mutator method: 원본 배열 원본변경
 - Accessor method: 원본 배열 원본변경 X 새로운 배열 생성해 반환
 
-- isArray : 배열인지 확인
-- indexOf : 요소의 인덱스 검색
-- unshift: 인자들을 원본배열 선두에 추가 (원본변경 O)
+- `Array.prototype.indexOf(idx)` : 요소의 인덱스 검색
+- `Array.prototype.unshift(args)`: 인자들을 원본배열 선두에 추가 (원본변경 O)
   - `const newArr = [args, ...arr]` : 원본 변경 X
-- shift: pop_front
-- concat: 인자를 마지막 요소로 추가한 배열을 생성 (원본변경X)
+- `Array.prototype.shift()` pop_front
+- `Array.prototype.concat(args)` 인자를 **마지막 요소**로 추가한 배열을 생성 (원본변경X)
   - 배열일 경우 해체하여 전달
-- splice(a,b,c): a에서부터 b만큼 제거 후 c를 그자리에 추가
+- `Array.prototype.splice(a,b,c)`: a에서부터 b만큼 제거 후 c를 그자리에 추가
 
   - b부터 없을경우 모두 제거
 
-- slice(startIdx,endIdx) : 범위 요소 복사하여 배열로 반환
-- join(separator) : 요소를 구분자로 구분된 문자열로 반환
-- reverse: 뒤집는다. (원본 변경 O)
-- fill : 가득채운다 (원본 변경 O)
-- includes(elem,idx): 요소 포함 여부 확인
+- `Array.prototype.slice(startIdx,endIdx)` : 범위 요소 복사하여 배열로 반환
+- `Array.prototype.join(separator)` : 요소를 구분자로 구분된 문자열로 반환
+- `Array.prototype.reverse()`: 뒤집는다. (원본 변경 O)
+- `Array.prototype.fill(value) :` value로 가득채운다 (원본 변경 O)
+- `Array.prototype.includes(elem,idx)`: 요소 포함 여부 확인
   - idx가 음수 : length - idx 부터 확인
-- flat(n) : n번만큼 평탄화
+- `Array.prototype.flat(n)` : n번만큼 평탄화
   - Infinity : 모두
 
 ### 배열 고차함수
 
-- sort() : 오름차순 정렬
+- `Array.prototype.sort(sortFunction)` : 오름차순 정렬
   - 유니코드 순으로 정렬되므로 숫자 정렬시 `(a,b => a -b)`로 비교함수를 바꿔야한다.
   - 비교함수 값
     - 1: 두 번째 인자 우선
     - 0: 교체 X
     - -1: 첫 번째 인자 우선
   - timesort 알고리즘 사용
-- forEach: for문 대체
+- `Array.prototype.forEach(callback)`: for문 대체
   - 콜백함수 인자: `(item, index, arr)`
     - 콜백함수를 통해 원본 `arr` 변경가능
   - 성능 비교적 별로
   - 가독성 좋음
   - break, continue X -> return으로 대체
-- map: 요소를 순회하며 콜백함수를 호출하여 새로운 배열 반환
+- `Array.prototype.map(callback)`: 요소를 순회하며 콜백함수를 호출하여 새로운 배열 반환
   - 콜백함수 인자: `(item, index, arr)`
-- filter: 요소를 순회하며 콜백함수를 호출하여 참인 요소들로 구성된 새 배열 반환
+- `Array.prototype.filter(callback)`: 요소를 순회하며 콜백함수를 호출하여 참인 요소들로 구성된 새 배열 반환
 
   - 콜백함수 인자: `(item, index, arr)`
 
-- **reduce**: 요소를 순회하며 콜백함수를 호출하고 반환값을 첫 번째 인자로 삼으며 하나의 값을 만들어 반환
+- **`Array.prototype.reduce()`**: 요소를 순회하며 콜백함수를 호출하고 반환값을 첫 번째 인자로 삼으며 하나의 값을 만들어 반환
 
   - 콜백함수 인자: `(accumulator, currentValue, index, arr)`
   - 자체인자 `(callback, initialValue)`
     - 초기값 꼭 주기
 
-- some: 요소를 순회하며 콜백함수를 호출하여 하나라도 참이면 true 반환 아니면 false
-- every: 요소를 순회하며 콜백함수를 호출하여 하나라도 모두이면 true 반환 아니면 false
-- find: 요소를 순회하며 콜백함수를 호출하여 반환값이 처음으로 참인 요소 반환
-- find: 요소를 순회하며 콜백함수를 호출하여 반환값이 처음으로 참인 요소의 인덱스 반환
-- flatMap : map -> flat
+- `Array.prototype.some(callback)`: 요소를 순회하며 콜백함수를 호출하여 하나라도 참이면 true 반환 아니면 false
+- `Array.prototype.every(callback)`: 요소를 순회하며 콜백함수를 호출하여 하나라도 모두이면 true 반환 아니면 false
+- `Array.prototype.find(callback)`: 요소를 순회하며 콜백함수를 호출하여 반환값이 처음으로 참인 요소 반환
+- `Array.prototype.findIndex(callback)`: 요소를 순회하며 콜백함수를 호출하여 반환값이 처음으로 참인 요소의 인덱스 반환
+- `Array.prototype.flatMap(callback)` : map -> flat
 
 ## 느낀점
 
