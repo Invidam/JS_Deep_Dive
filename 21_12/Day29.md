@@ -138,7 +138,7 @@ for (const num of iterable) console.log(num);
 ### 사용자 정의 이터러블
 
 ```
-const fibonacci(max) = {
+const fibonacci = function(max)  {
   [Symbol.iterator]() {
     let pre = 0,
       cur = 1;
@@ -157,17 +157,31 @@ for (const num of iterable(100)) console.log(num);
 
 - 위 처럼 외부에서 인자 전달이 가능하다.
 - ```
-  const fibonacci(max) = {
-    [Symbol.iterator]() {
-      let pre = 0,
-        cur = 1;
-      return {
-        next() {
-          [pre, cur] = [cur, pre + cur];
-          return { value: cur, done: cur > max };
-        },
-      };
-    },
+  const fibonacci = function (max) {
+    let [pre, cur] = [0, 1];
+    return {
+      next() {
+        [pre, cur] = [cur, pre + cur];
+        return { value: cur, done: cur > max };
+      },
+      [Symbol.iterator]() {
+        return this;
+      },
+    };
   };
-  for (const num of iterable(100)) console.log(num);
+
   ```
+
+- 이터러블이면서 이터레이터로도 생성 가능하다.
+  - 이터러블: iterator를 호출 시 next()를 가진 함수를 반환한다.
+  - 이터레이터: next() 호출 시 result 객체를 반환한다.
+
+### 지연평가
+
+- 배열 등의 자료구조는 미리 메모리에 데이터를 확보하지만, 이터러블은 데이터가 필요한 시점에 생성한다.
+  - 이러한 기법을 **지연 평가**라고 한다.
+    - 빠른 속도 & 불필요 메모리 소비 X
+
+## 느낀점
+
+-
