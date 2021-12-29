@@ -1,9 +1,15 @@
-const camel = "testStringObject";
-const snake = "test_string_object";
+const iterable = {
+  [Symbol.iterator]() {
+    let pre = 0,
+      curr = 1;
+    let max = 100;
+    return {
+      next() {
+        [pre, curr] = [curr, pre + curr];
+        return { value: curr, done: curr > max };
+      },
+    };
+  },
+};
 
-const camelToSnake = (str) =>
-  str.replace(/[A-Z]/g, (match) => "_" + match.toLowerCase());
-const snakeToCamel = (str) =>
-  str.replace(/_[a-z]/g, (match) => match[1].toUpperCase());
-console.log(camel, camelToSnake(camel), snake);
-console.log(snake, snakeToCamel(snake), camel);
+for (const num of iterable) console.log(num);
