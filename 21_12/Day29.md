@@ -138,20 +138,23 @@ for (const num of iterable) console.log(num);
 ### 사용자 정의 이터러블
 
 ```
-const fibonacci = function(max)  {
-  [Symbol.iterator]() {
-    let pre = 0,
-      cur = 1;
-    return {
-      next() {
-        [pre, cur] = [cur, pre + cur];
-        return { value: cur, done: cur > max };
-      },
-    };
-  },
+const fibonacci = function (max) {
+  return {
+    [Symbol.iterator]() {
+      let pre = 0,
+        cur = 1;
+      return {
+        next() {
+          [pre, cur] = [cur, pre + cur];
+          return { value: cur, done: cur > max };
+        },
+      };
+    },
+  };
 };
 
-for (const num of iterable(100)) console.log(num);
+for (const num of fibonacci(100)) console.log(num);
+
 
 ```
 
