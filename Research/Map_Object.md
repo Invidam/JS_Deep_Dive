@@ -30,6 +30,10 @@
 
 ### Hash Map의 Access 시간복잡도 계산
 
+<details>
+<summary>결과 보기</summary>
+<div markdown="1">
+
 - 버킷: key -> index 변환하였을 때, index가 가리키는 주소
   - hash function f(x)가 g(x) [임의의 함수] % 100 [저장할 공간의 크기] 이라고 했을 때,
   - map("key1") 에서, key1이 g(key1) = 123이라면, f(key1) = 23이며
@@ -57,6 +61,9 @@
     - load factor은 임계치로, 버킷이 얼마나 찼는지를 보여준다. (기본값은 0.75이다.)
       - 따라서 버킷이 찰수록 load factor에 의해 capacity가 늘어나므로 m은 0.75 \* n 보다 작은 값이다.
   - 결국 시간복잡도는 O(1 + n/m) < O(1 + n/(0.75 \* n)) = O( 1 + (1/ 0.75)) = O (1) 이므로 O(1) 이다.
+
+</div>
+</details>
 
 - 참고
   - https://wjdtn7823.tistory.com/75

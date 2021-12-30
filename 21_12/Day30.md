@@ -92,3 +92,101 @@
     console.log(firstName, lastName, first, last);
 
 - 2처럼 다른 변수에 할당도 가능하다.
+
+## 느낀점
+
+    let [pre, cur] = [0, 1];
+    console.log(pre, cur);
+    let n = 10;
+    while (n--) {
+    [pre, cur] = [cur, pre + cur];
+    console.log(pre, cur);
+    }
+    //0 1
+    //1 1
+    //1 2
+    //2 3
+    //3 5
+
+- 간단한 피보나치 수열 예제인데, `[pre, cur] = [cur, pre + cur];` 에서
+  - 내가 생각한 동작
+    - `pre = cur // pre = 1`
+    - `cur = pre + cur // cur = 1 + 1 = 2`
+  - 실제 동작
+    - `pre = cur // pre = 1`
+    - `cur = pre + cur // cur = 0 + 1 = 1`
+      - cur에 들어가는 pre가 1로 변경된 pre가 아닌, 변경되기 전 0이 들어간다.
+        - 즉 디스트럭처링 할당은 동시에 일어나는 것 같다.
+
+# 37. Set & Map
+
+## 정리
+
+### Set
+
+- 생성자함수: `new Set(array) `
+- 사이즈 확인: `Set.prototype.size `
+  - 수정불가능함 getter만 존재
+- 요소 추가: `Set.prototype.add(elem)`
+  - 중복 허용 X (무시)
+  - 해당 객체를 반환함으로, 반복 추가 가능
+- 요소 존재 확인: `Set.prototype.has(elem)`
+- 요소 삭제: `Set.prototype.delete(elem)`
+- 일괄 삭제: `Set.prototype.clear()`
+- 요소 순회: `Set.prototype.forEach(elem,elem,set)`
+  - 첫 번째와 두 번째 인자는 동일한 값이다.
+    - Array.forEach와 인터페이스 통일을 위해 존재한다.
+  - 순회 순서는 추가된 순서이다.
+- 이터러블임으로for of 문으로도 순회가 가능하다.
+
+      const set1 = new Set([1, 2, 3, 5]);
+      const set2 = new Set([2, 3, 4, 6]);
+      const subSet1 = new Set([1, 2]);
+
+      //교집합
+      Set.prototype[Symbol.for("intersection")] = function (set) {
+        return new Set([...this].filter((value) => set.has(value)));
+      };
+
+      console.log(set1[Symbol.for("intersection")](set2)); //Set(2) { 2, 3 }
+
+      //합집합
+      Set.prototype[Symbol.for("union")] = function (set) {
+        return new Set([...this, ...set].sort());
+      };
+
+      console.log(set1[Symbol.for("union")](set2)); //Set(6) { 1, 2, 3, 4, 5, 6 }
+
+      //여집합
+      Set.prototype[Symbol.for("difference")] = function (set) {
+        return new Set([...this].filter((value) => !set.has(value)));
+      };
+
+
+      //상위 집합
+      console.log(set1[Symbol.for("difference")](set2)); //Set(2) { 1, 5 }
+      Set.prototype[Symbol.for("isSuperSet")] = function (subset) {
+        return [...subset].every((value) => this.has(value));
+      };
+
+
+      console.log(set1[Symbol.for("isSuperSet")](subSet1)); //Set(2) { 1, 5 }
+
+### Map
+
+- 생성자 함수: `const map = new Map([["key1","value1"],["key2","value2"]])`
+- 사이즈 확인: `Map.prototype.size `
+  - 수정불가능함 getter만 존재
+- 요소 추가: `Map.prototype.set(key,value)`
+  - 중복 허용 X (무시)
+  - 해당 객체를 반환함으로, 반복 추가 가능
+  - 객체와 달리 모든 타입을 키로 사용 가능
+- 요소 존재 확인: `Map.prototype.has(key)`
+- 요소 삭제: `Map.prototype.delete(key)`
+- 일괄 삭제: `Map.prototype.clear()`
+- 요소 순회: `Map.prototype.forEach(key,value,set)`
+  - 순회순서: 추가 순서
+- 이터러블이다.
+- `Map.prototype.keys()`: Map의 key를 값으로 가지는 이터러블이며 이터레이터인 객체 반환
+- `Map.prototype.values()`: Map의 value를 값으로 가지는 이터러블이며 이터레이터인 객체 반환
+- `Map.prototype.entries()`: Map의 key, value 쌍을 값으로 가지는 이터러블이며 이터레이터인 객체 반환
