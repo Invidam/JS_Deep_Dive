@@ -190,3 +190,7 @@
 - `Map.prototype.keys()`: Map의 key를 값으로 가지는 이터러블이며 이터레이터인 객체 반환
 - `Map.prototype.values()`: Map의 value를 값으로 가지는 이터러블이며 이터레이터인 객체 반환
 - `Map.prototype.entries()`: Map의 key, value 쌍을 값으로 가지는 이터러블이며 이터레이터인 객체 반환
+
+## 느낀점
+
+-
