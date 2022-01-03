@@ -135,3 +135,45 @@
 
 - 대부분의 이벤트는 버블링단계에서 상위 DOM에서도 캐치가능하다.
   - event.bubbles가 false인 요소는 불가능하므로, 캡처링 단계를 캐치해야한다.
+
+### 이벤트 위임
+
+- 모든 자식들에게 이벤트를 발생시키면 성능 저하 & 코드 복잡성 증가된다.
+- 따라서, 부모에게 위임을 한다.
+
+### DOM 요소의 기본 동작 조작
+
+- 기본 동작 중단: `event.preventDefault()`
+- 이벤트 전파 방지: `event.stopPropagation()`
+  - 해당 이벤트의 버블링 캡처링을 막는다.
+
+### 이벤트 핸들러에서의 this
+
+- 어트리뷰트 방식은 일반함수로서 호출되므로 전역 객체를 가리킨다.
+  - 인자로 this를 전달하면 바인딩한 DOM 요소를 가리킨다.
+- 프로퍼티 방식과 메서드 방식: 바인딩한 DOM 요소를 가리킨다.
+
+### 이벤트 핸들러에 인수 전달
+
+- 어트리뷰트 방식을 제외한 방식들은 핸들러에 함수 자체를 전달해야 하기에 인자 전달이 까다롭다.
+- 방법1: `.onblur = () => sayHi(name)`
+- 방법2: `.onblur = name => () => console.log('Hi ${name}')`
+
+### 커스텀 이벤트 생성
+
+- 키보드 커스텀 이벤트 생성: `new KeyboardEvent(keyboard event)`
+- 새로운 타입의 커스텀 이벤트 생성: `new CustomEvent(event type)`
+
+  - bubbles & cancelable 이 false로 설정
+    - 변경 위해서는 두 번째 인자로 조정
+    - `new CustomEvent(event type, {bubbles: true, cancelable: true})`
+    - isTrusted 프로퍼티가 언제나 false이다.
+
+- 이벤트 디스패치
+  - `Element.dispatchEvent(customEvent)`:
+  - 두 번째 인자로 디테일한 정보를 전달 가능하다.
+  - 동기적으로 처리하므로 등록 후 디스패치해야한다.
+
+## 느낀점
+
+- 브라우저 - JS에서 이벤트가 어떻게 동작하는 지 알게되었다.

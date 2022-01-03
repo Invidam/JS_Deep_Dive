@@ -22,14 +22,18 @@
   <script>
     const $fruits = document.querySelector("ul");
     const $msg = document.querySelector("em");
+    const $banana = document.getElementById("banana");
+    $banana.addEventListener("click", () => alert("DISPATCHED"));
     function activate({ target }) {
+      console.log(target, target.matches("ul > li"));
+      if (!target.matches("ul > li")) return;
       [...$fruits.children].forEach(($fruit) => {
         $fruit.classList.toggle("active", target === $fruit);
         $msg.textContent = target.id;
       });
+      const customClickEvent = new MouseEvent("active");
+      $banana.dispatchEvent(customClickEvent);
     }
-    document.getElementById("apple").onclick = activate;
-    document.getElementById("banana").onclick = activate;
-    document.getElementById("orange").onclick = activate;
+    $fruits.onclick = activate;
   </script>
 </html>
