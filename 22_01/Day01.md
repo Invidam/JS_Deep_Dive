@@ -250,7 +250,7 @@
     - `contains(className)`: 존재 확인
     - `replace(old, new)`: 클래스 변경
     - `toggle(className[,force])`: 존재 O -> 제거 & 존재 X -> 추가
-      - force 인자는 강제 추가/제거 여부를 결정한다.
+      - force 인자가 있을 경우 true -> 추가 false -> 삭제로 논리를 변경한다.결정한다.
 
 ### 적용된 CSS 스타일 참조
 

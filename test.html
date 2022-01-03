@@ -5,19 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .active {
+        color: red;
+      }
+    </style>
   </head>
   <body>
-    <div id="foo">
-      HELLO
-      <h2>WORLD</h2>
-    </div>
-    <input type="text" />
-    <button id="btn">BTN</button>
+    <ul>
+      <li class="active" id="apple">apple</li>
+      <li id="banana">banana</li>
+      <li id="orange">orange</li>
+    </ul>
+    <em>apple</em>
   </body>
   <script>
-    const $foo = document.getElementById("foo");
-    const $text = $foo.firstChild;
-    // const $btn = document.getElementById("btn");
-    // $btn.addEventListener("click", () => ($foo.textContent = "CLICKED"));
+    const $fruits = document.querySelector("ul");
+    const $msg = document.querySelector("em");
+    function activate({ target }) {
+      [...$fruits.children].forEach(($fruit) => {
+        $fruit.classList.toggle("active", target === $fruit);
+        $msg.textContent = target.id;
+      });
+    }
+    document.getElementById("apple").onclick = activate;
+    document.getElementById("banana").onclick = activate;
+    document.getElementById("orange").onclick = activate;
   </script>
 </html>
