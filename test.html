@@ -5,35 +5,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>
-      .active {
-        color: red;
-      }
-    </style>
   </head>
   <body>
-    <ul>
-      <li class="active" id="apple">apple</li>
-      <li id="banana">banana</li>
-      <li id="orange">orange</li>
-    </ul>
-    <em>apple</em>
+    <p>0</p>
+    <button>BTN</button>
   </body>
   <script>
-    const $fruits = document.querySelector("ul");
-    const $msg = document.querySelector("em");
-    const $banana = document.getElementById("banana");
-    $banana.addEventListener("click", () => alert("DISPATCHED"));
-    function activate({ target }) {
-      console.log(target, target.matches("ul > li"));
-      if (!target.matches("ul > li")) return;
-      [...$fruits.children].forEach(($fruit) => {
-        $fruit.classList.toggle("active", target === $fruit);
-        $msg.textContent = target.id;
-      });
-      const customClickEvent = new MouseEvent("active");
-      $banana.dispatchEvent(customClickEvent);
-    }
-    $fruits.onclick = activate;
+    const $btn = document.querySelector("button");
+    const $text = document.querySelector("p");
+    let count = 0;
+    const debounce = (callback, delay) => {
+      let timeId;
+      return (event) => {
+        if (timeId) clearTimeout(timeId);
+        timeId = setTimeout(callback, delay, event);
+      };
+    };
+    const throttle = (callback, delay) => {
+      let timeId;
+      return (event) => {
+        if (timeId) return;
+        timeId = setTimeout(
+          () => {
+            callback();
+            timeId = null;
+          },
+          delay,
+          event
+        );
+      };
+    };
+    const addCount = () => {
+      ++count;
+      $text.textContent = count;
+    };
+    $btn.addEventListener(
+      "click",
+      throttle(() => addCount(), 1000)
+    );
   </script>
 </html>

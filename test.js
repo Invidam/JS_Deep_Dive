@@ -1,25 +1,29 @@
-const set1 = new Set([1, 2, 3, 5]);
-const set2 = new Set([2, 3, 4, 6]);
-const subSet1 = new Set([1, 2]);
-Set.prototype[Symbol.for("intersection")] = function (set) {
-  return new Set([...this].filter((value) => set.has(value)));
+const count1Sec = (text, callback = () => {}) => {
+  return setTimeout(() => {
+    console.log(text);
+
+    callback();
+  }, 10000);
 };
-
-console.log(set1[Symbol.for("intersection")](set2)); //Set(2) { 2, 3 }
-
-Set.prototype[Symbol.for("union")] = function (set) {
-  return new Set([...this, ...set].sort());
+const countSeconds = (totalSecond, currSecond = 0) => {
+  const getNextSecond = () => currSecond + 1;
+  const makeSecondInfo = () => `(${currSecond}/${totalSecond})`;
+  count1Sec(
+    makeSecondInfo(),
+    currSecond !== 5
+      ? () => countSeconds(totalSecond, 1 + currSecond)
+      : () => {}
+  );
 };
+// setTimeout()
 
-console.log(set1[Symbol.for("union")](set2)); //Set(6) { 1, 2, 3, 4, 5, 6 }
+// countSeconds(5);
+// const id = count1Sec("Hi");
+// console.log(id);
+// clearTimeout(id);
 
-Set.prototype[Symbol.for("difference")] = function (set) {
-  return new Set([...this].filter((value) => !set.has(value)));
-};
-
-console.log(set1[Symbol.for("difference")](set2)); //Set(2) { 1, 5 }
-Set.prototype[Symbol.for("isSuperSet")] = function (subset) {
-  return [...subset].every((value) => this.has(value));
-};
-
-console.log(set1[Symbol.for("isSuperSet")](subSet1)); //Set(2) { 1, 5 }
+let count = 0;
+const timeId = setInterval(() => {
+  console.log(count++);
+  if (count === 5) clearInterval(timeId);
+}, 1000);
