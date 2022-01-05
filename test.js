@@ -1,29 +1,25 @@
-const count1Sec = (text, callback = () => {}) => {
-  return setTimeout(() => {
-    console.log(text);
-
-    callback();
-  }, 10000);
+const obj = {
+  name: "Invidam",
+  age: 23,
+  hobby: ["movie", "game"],
 };
-const countSeconds = (totalSecond, currSecond = 0) => {
-  const getNextSecond = () => currSecond + 1;
-  const makeSecondInfo = () => `(${currSecond}/${totalSecond})`;
-  count1Sec(
-    makeSecondInfo(),
-    currSecond !== 5
-      ? () => countSeconds(totalSecond, 1 + currSecond)
-      : () => {}
+
+// console.log(JSON.stringify(obj));
+// console.log(JSON.stringify(obj, ["name"], 2));\
+let idx = 0;
+function replacer(key, value) {
+  console.log(
+    idx++,
+    "args",
+    JSON.stringify(arguments),
+    "\nK",
+    key,
+    typeof key,
+    "\nV",
+    value,
+    typeof value
   );
-};
-// setTimeout()
-
-// countSeconds(5);
-// const id = count1Sec("Hi");
-// console.log(id);
-// clearTimeout(id);
-
-let count = 0;
-const timeId = setInterval(() => {
-  console.log(count++);
-  if (count === 5) clearInterval(timeId);
-}, 1000);
+  if (key === "") return value;
+  return typeof value === "string" ? value : undefined;
+}
+console.log(JSON.stringify(obj, replacer, 2));

@@ -12,36 +12,21 @@
   </body>
   <script>
     const $btn = document.querySelector("button");
-    const $text = document.querySelector("p");
-    let count = 0;
-    const debounce = (callback, delay) => {
-      let timeId;
-      return (event) => {
-        if (timeId) clearTimeout(timeId);
-        timeId = setTimeout(callback, delay, event);
+    const XMLRequest = () => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("get", "https://jsonplaceholder.typicode.com/todos/1");
+      xhr.send();
+      xhr.onreadystatechange = () => {
+        if (xhr.status === 200) {
+          const $p = document.querySelector("p");
+          console.log(xhr.response);
+          $p.textContent = JSON.stringify(xhr.response, null, "\t");
+        }
       };
     };
-    const throttle = (callback, delay) => {
-      let timeId;
-      return (event) => {
-        if (timeId) return;
-        timeId = setTimeout(
-          () => {
-            callback();
-            timeId = null;
-          },
-          delay,
-          event
-        );
-      };
-    };
-    const addCount = () => {
-      ++count;
-      $text.textContent = count;
-    };
-    $btn.addEventListener(
-      "click",
-      throttle(() => addCount(), 1000)
-    );
+    $btn.addEventListener("click", () => {
+      console.log("BTN CLICK");
+      XMLRequest();
+    });
   </script>
 </html>
