@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>NOPE</p>
+    <script>
+      const xhr = new XMLHttpRequest();
+      xhr.open("DELETE", "/todos/4");
+      xhr.setRequestHeader("content-type", "application/json");
+      xhr.send();
+      xhr.onload = () => {
+        if (xhr.status === 200 || xhr.status === 201) {
+          const $p = document.querySelector("p");
+          console.log(xhr.response);
+          $p.textContent = xhr.response;
+        } else {
+          console.error("Error", xhr.status, xhr.statusText);
+        }
+      };
+    </script>
+  </body>
+</html>
