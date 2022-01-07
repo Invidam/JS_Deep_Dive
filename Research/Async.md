@@ -1,39 +1,38 @@
-# 예제를 통한 비동기 문제 해결 방법
+# 예제만을 통한 비동기 문제 해결 방법
 
-## 비동기 처리가 필요한 이유
+## 비동기 처리가 없을 경우
 
 - 예제
 
-        const NAME = "Invidam",
+      const NAME = "Invidam",
         ID = { Invidam: 123 },
         INFO = { 123: { age: 23, hobby: ["game", "study", "movie"] } };
-        const getIdByName = async (name) => {
-            let ret;
-            await new Promise((resolve, _) =>
-                setTimeout(() => {
-                ret = ID[name];
-                resolve();
-                }, 1000)
-            );
-            console.log(`GET ID BY NAME, NAME: ${name} -> ID: ${ret}`);
-            return ret;
-        };
-        const getInfoById = async (id) => {
-            let ret;
-            await new Promise((resolve, _) =>
-                setTimeout(() => {
-                ret = INFO[id];
-                resolve();
-                }, 1000)
-            );
-            console.log(
-                `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
-            );
-            return ret;
-        };
 
-        const printInfo = (info) => console.log("FINALLY, INFO: ", info);
-        printInfo(getInfoById(getIdByName(NAME)));
+      const findIdByNameInDB = (name) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(ID[name]);
+          }, 1000)
+        );
+
+      const findInfoByIdInDB = (id) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(INFO[id]);
+          }, 1000)
+        );
+      const getIdByName = async (name) => {
+        let ret = await findIdByNameInDB(name);
+        console.log(`GET ID BY NAME, NAME: ${name} -> ID: ${ret}`);
+        return ret;
+      };
+      const getInfoById = async (id) => {
+        let ret = await findInfoByIdInDB(id);
+        console.log(
+          `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
+        );
+        return ret;
+      };
 
 - 결과값
 
@@ -43,7 +42,8 @@
   GET INFO BY ID, ID: [object Promise] -> INFO: undefined
   ```
 
-- `getIdByName`: 이름 -> ID를 가져오는 비동기 함수 (**async, await, Promise는 신경쓰지 말고 Input과 Output만을 고려해보자**)
+- findIdByNameInDB, findInfoByIdInDB는 우리가 알 필요 없는 오래걸리는 임의의 비동기 함수라고 가정하자.
+- `getIdByName`: 이름 -> ID를 가져오는 비동기 함수
 - `getInfoById`: ID -> 정보를 가져오는 비동기 함수
 - `printInfo`: 정보 출력하는 동기 함수
 - `printInfo(getInfoById(getIdByName(NAME)))`라는 일반적인 함수처리 방식을 사용하게 되면
@@ -56,38 +56,40 @@
 
 - 예제
 
-        const NAME = "Invidam",
+      const NAME = "Invidam",
         ID = { Invidam: 123 },
         INFO = { 123: { age: 23, hobby: ["game", "study", "movie"] } };
-        const getIdByName = async (name, callback) => {
-        let ret;
-        await new Promise((resolve, _) =>
-            setTimeout(() => {
-            ret = ID[name];
-            resolve();
-            }, 1000)
+
+      const findIdByNameInDB = (name) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(ID[name]);
+          }, 1000)
         );
+
+      const findInfoByIdInDB = (id) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(INFO[id]);
+          }, 1000)
+        );
+
+      const getIdByName = async (name, callback) => {
+        let ret = await findIdByNameInDB(name);
         console.log(`GET ID BY NAME, NAME: ${name} -> ID: ${ret}`);
         callback(ret);
-        };
-        const getInfoById = async (id, callback) => {
-        let ret;
-        await new Promise((resolve, _) =>
-            setTimeout(() => {
-            ret = INFO[id];
-            resolve();
-            }, 1000)
-        );
+      };
+      const getInfoById = async (id, callback) => {
+        let ret = await findInfoByIdInDB(id);
         console.log(
-            `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
+          `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
         );
         callback(ret);
-        };
+      };
 
-        const printInfo = (info) => console.log("FINALLY, INFO: ", info);
+      const printInfo = (info) => console.log("FINALLY, INFO: ", info);
 
-
-        getIdByName(NAME, (id) => getInfoById(id, printInfo));
+      getIdByName(NAME, (id) => getInfoById(id, printInfo));
 
 - 결과
 
@@ -98,7 +100,7 @@
             "game",
             "study",
             "movie"
-        ]
+            ]
         }
         FINALLY, INFO:  { age: 23, hobby: [ 'game', 'study', 'movie' ] }
 
@@ -122,47 +124,50 @@
 
 - 예제
 
-        const NAME = "Invidam",
+      const NAME = "Invidam",
         ID = { Invidam: 123 },
         INFO = { 123: { age: 23, hobby: ["game", "study", "movie"] } };
-        const promiseGetIdByName =  (name) => {
-        return new Promise(async (resolve, reject) => {
-            let ret;
-            await new Promise((resolve, _) =>
-            setTimeout(() => {
-                ret = ID[name];
-                resolve(ret);
-            }, 1000)
-            );
-            console.log(`GET ID BY NAME, NAME: ${name} -> ID: ${ret}`);
-            resolve(ret);
-        });
-        };
-        const promiseGetInfoById =  (id) => {
-        return new Promise(async (resolve, reject) => {
-            let ret;
-            await new Promise((resolve, _) =>
-            setTimeout(() => {
-                ret = INFO[id];
-                resolve();
-            }, 1000)
-            );
-            console.log(
-            `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
-            );
-            console.log(JSON.stringify(id));
-            resolve(ret);
-        });
-        };
 
-        const printInfo = (info) => console.log("FINALLY, INFO: ", info);
-        promiseGetIdByName(NAME)
+      const findIdByNameInDB = (name) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(ID[name]);
+          }, 1000)
+        );
+
+      const findInfoByIdInDB = (id) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(INFO[id]);
+          }, 1000)
+        );
+
+      const promiseGetIdByName = (name) => {
+        return new Promise(async (resolve, reject) => {
+          let ret = await findIdByNameInDB(name);
+          console.log(`GET ID BY NAME, NAME: ${name} -> ID: ${ret}`);
+          resolve(ret);
+        });
+      };
+      const promiseGetInfoById = (id) => {
+        return new Promise(async (resolve, reject) => {
+          let ret = await findInfoByIdInDB(id);
+          console.log(
+            `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
+          );
+          console.log(JSON.stringify(id));
+          resolve(ret);
+        });
+      };
+
+      const printInfo = (info) => console.log("FINALLY, INFO: ", info);
+      promiseGetIdByName(NAME)
         .then((name) => promiseGetInfoById(name))
         .then((info) => printInfo(info))
         .catch((err) => console.err(err));
 
 - 결과값은 콜백 예제와 동일하다.
-- 변경사항
+- 변경사항 (비교: 콜백 패턴)
 
   - getIdByName , getInfoById 두 함수가 프로미스 함수로 변경되었다.
   - `return ret`이 사라지고 `resolve(ret)`으로 변경되었다.
@@ -175,3 +180,69 @@
   4. id 해당하는 info가 결정되며 `resolve(ret)` 으로 info가 전달된다.
   5. info를 인자로 가지는 콜백함수 `printInfo` 를 실행한다.
   6. 원하는 결과가 출력된다.
+
+## async/await을 이용한 해결
+
+      const NAME = "Invidam",
+        ID = { Invidam: 123 },
+        INFO = { 123: { age: 23, hobby: ["game", "study", "movie"] } };
+
+      const findIdByNameInDB = (name) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(ID[name]);
+          }, 1000)
+        );
+
+      const findInfoByIdInDB = (id) =>
+        new Promise((resolve, _) =>
+          setTimeout(() => {
+            resolve(INFO[id]);
+          }, 1000)
+        );
+
+      const promiseGetIdByName = (name) => {
+        return new Promise(async (resolve, reject) => {
+          let ret = await findIdByNameInDB(name);
+          console.log(`GET ID BY NAME, NAME: ${name} -> ID: ${ret}`);
+          resolve(ret);
+        });
+      };
+      const promiseGetInfoById = (id) => {
+        return new Promise(async (resolve, reject) => {
+          let ret = await findInfoByIdInDB(id);
+          console.log(
+            `GET INFO BY ID, ID: ${id} -> INFO: ${JSON.stringify(ret, null, 2)}`
+          );
+          console.log(JSON.stringify(id));
+          resolve(ret);
+        });
+      };
+
+      const printInfo = (info) => console.log("FINALLY, INFO: ", info);
+
+      (async () => {
+        try {
+          const id = await promiseGetIdByName(NAME);
+          const info = await promiseGetInfoById(id);
+          printInfo(info);
+        } catch (error) {
+          console.error(err);
+        }
+      })();
+
+- 결과값은 콜백 예제와 동일하다.
+- 변경사항 (비교: 프로미스)
+
+  - 결과를 실행하는 코드가 동기방식과 유사하게 변경되었다.
+    - 에러처리 역시 동기방식처럼 동작한다.
+
+- 실행과정
+  1. `promiseGetIdByName` 가 실행되며, await 키워드가 이 함수를 기다린다.
+  2. `promiseGetIdByName`가 `resolve(ret)` 이 실행되며 종료된다.
+  3. `promiseGetIdByName`의 프로미스 상태변화를 await 키워드가 감지하여 ret이 id 변수에 할당된다.
+  4. `promiseGetInfoById` 가 실행되며, await 키워드가 이 함수를 기다린다.
+  5. `promiseGetInfoById`가 `resolve(ret)` 이 실행되며 종료된다.
+  6. `promiseGetInfoById`의 프로미스 상태변화를 await 키워드가 감지하여 ret이 info 변수에 할당된다.
+  7. info를 인자로 가지는 콜백함수 `printInfo` 를 실행한다.
+  8. 원하는 결과가 출력된다.
